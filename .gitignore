@@ -1,0 +1,6 @@
+.idea
+build
+tmp
+src/pymailfeedback.egg-info
+src/pymailfeedback/__pycache__
+.pymailfeedback.json
