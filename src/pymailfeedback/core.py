@@ -13,11 +13,11 @@ from functools import wraps
 from email.message import EmailMessage
 
  #TODO:
- # test loading variable from env
- # test verbose 1 and 2 in multifile
- # test sendbacon
+ # (DONE) test loading variable from env
+ # (DONE) test verbose 1 and 2 in multifile
+ # (DONE) test sendbeacon
  # test in pytorch with multiple workers
- # test multiple addreesses
+ # (DONE) test multiple addreesses
  # write readme
  # create repo
  # publication
@@ -25,7 +25,7 @@ from email.message import EmailMessage
 # Global configuration variables, lazily populated by _ensure_config_loaded()
 _SENDER_EMAIL = ""
 _SENDER_PASSWORD = ""
-_SMTP_SERVER = "smtp.gmail.com"
+_SMTP_SERVER = "smtp.mail.yahoo.com"
 _SMTP_PORT = 465
 _DEFAULT_RECIPIENT = ""
 _DEFAULT_VERBOSE = 0
@@ -43,7 +43,7 @@ _CONFIG_PATH_CWD = Path.cwd() / ".pymailfeedback.json"
 _CONFIG_FACSIMILE = """{
     "sender_email": "your_email@gmail.com",
     "sender_password": "your_app_password",
-    "smtp_server": "smtp.gmail.com",
+    "smtp_server": "smtp.mail.yahoo.com",
     "smtp_port": 465,
     "default_recipient": "recipient@example.com",
     "default_verbose": 0
@@ -65,7 +65,7 @@ def _interactive_setup():
     try:
         email = input("Sender Email (e.g., myemail@gmail.com): ").strip()
         password = input("Sender Password (e.g., App Password): ").strip()
-        server = input("SMTP Server [press Enter for 'smtp.gmail.com']: ").strip() or "smtp.gmail.com"
+        server = input("SMTP Server [press Enter for 'smtp.mail.yahoo.com']: ").strip() or "smtp.mail.yahoo.com"
         port_str = input("SMTP Port [press Enter for '465']: ").strip() or "465"
         port = int(port_str)
         default_recipient = input("Default recipient email (optional, press Enter to skip): ").strip()
