@@ -418,7 +418,10 @@ def sendstatus(to_addresses=None, verbose=None, shutdown=False, shutdown_delay=0
                         attachments.append(func_file)
 
                     if verbose >= 2:
+                        module_file = Path(__file__).resolve()
                         for frame in extracted_tb:
+                            if Path(frame.filename) == module_file: # exclude this file
+                                continue
                             if os.path.exists(frame.filename) and frame.filename not in attachments:
                                 attachments.append(frame.filename)
 
