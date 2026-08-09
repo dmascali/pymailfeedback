@@ -1,4 +1,5 @@
 # pymailfeedback
+[![PyPI version](https://badge.fury.io/py/pymailfeedback.svg)](https://pypi.org/project/pymailfeedback/)
 
 **Never wonder if your long-running script finished or crashed.**
 
