@@ -7,5 +7,6 @@ def func_that_does_something():
         print(f"{i} Elapsed time: {time.time()-start_time}")
         sendbeacon(delta_time_minutes=1)
         time.sleep(5)
+        print(c)
 
     return b

@@ -41,8 +41,8 @@ _CONFIG_PATH_HOME = Path.home() / ".pymailfeedback.json"
 _CONFIG_PATH_CWD = Path.cwd() / ".pymailfeedback.json"
 
 _CONFIG_FACSIMILE = """{
-    "sender_email": "your_email@gmail.com",
-    "sender_password": "your_app_password",
+    "sender_email": "sender_email@gmail.com",
+    "sender_password": "sender__app_password",
     "smtp_server": "smtp.mail.yahoo.com",
     "smtp_port": 465,
     "default_recipient": "recipient@example.com",
@@ -137,6 +137,7 @@ def _load_config():
     env_email = os.getenv("PYMAIL_SENDER_EMAIL")
     env_pwd = os.getenv("PYMAIL_SENDER_PASSWORD")
     if env_email and env_pwd:
+        print("[pymailfeedback] Using email configuration from environment variables.", file=sys.stderr)
         _SENDER_EMAIL = env_email
         _SENDER_PASSWORD = env_pwd
         _SMTP_SERVER = os.getenv("PYMAIL_SMTP_SERVER", _SMTP_SERVER)
@@ -156,14 +157,24 @@ def _load_config():
                     _SMTP_PORT = config.get("smtp_port", _SMTP_PORT)
                     _DEFAULT_RECIPIENT = config.get("default_recipient", _DEFAULT_RECIPIENT)
                     _DEFAULT_VERBOSE = config.get("default_verbose", _DEFAULT_VERBOSE)
+                    print(f"[pymailfeedback] Loaded email configuration from {config_path.resolve()}.", file=sys.stderr)
                 return
             except Exception as e:
                 print(f"Warning: Failed to read config file {config_path}: {e}", file=sys.stderr)
 
-    if sys.stdin.isatty() and sys.stdout.isatty():
+    # Attempt interactive setup directly instead of relying on isatty().
+    # isatty() reports False in many IDE run consoles (e.g. PyCharm's Run
+    # window), even though input() still works fine there. We try the
+    # actual input() call and only give up on a real EOFError/OSError,
+    # which happens in truly non-interactive contexts (cron, CI, piped stdin).
+    try:
         response = input("[pymailfeedback] No email configuration found. Setup now? (y/n): ").strip().lower()
-        if response == 'y' and _interactive_setup():
-            return
+    except (EOFError, OSError):
+        _raise_missing_config_error()
+        return
+
+    if response == 'y' and _interactive_setup():
+        return
 
     _raise_missing_config_error()
 
@@ -323,7 +334,7 @@ def sendmsg(to_addresses=None, subject="", message="", attachments=None, html_bo
         print(f"Failed to send email: {e}", file=sys.stderr)
 
 
-def sendstatus(to_addresses=None, verbose=None, shutdown=False, shutdown_delay=0):
+def sendstatus(to_addresses=None, verbose=None, shutdown=False, shutdown_delay=60):
     """
     Decorator to send the execution status via email.
     Wraps the decorated function in a try/except block.
@@ -339,6 +350,10 @@ def sendstatus(to_addresses=None, verbose=None, shutdown=False, shutdown_delay=0
     _ensure_config_loaded()
     if verbose is None:
         verbose = _DEFAULT_VERBOSE
+
+    # Summary of the decorator's configuration (recepient, verbosity, shutdown behavior)
+    print(f"[pymailfeedback] sendstatus decorator configured with recipient(s): {to_addresses or _DEFAULT_RECIPIENT}, "
+            f"shutdown: {shutdown}, shutdown_delay: {shutdown_delay} seconds.", file=sys.stderr)
 
     def decorator(func):
         @wraps(func)
