@@ -2,7 +2,7 @@
 
 **pymailfeedback** sends you an email report the moment your script finishes, whether it succeeded or crashed. Wrap any function in the `@sendstatus` decorator and get notified by mail, complete with a traceback and optional file attachments if something went wrong.
 
-This project is a Python port of [MatlabMailFeedback](https://github.com/dmascali/MatlabMailFeedback). `pymailfeedback` reproduces the same core idea — wrapping a script/function in a try/except block to report its exit status by email — using idiomatic Python (decorators instead of `evalin`/`onCleanup` tricks).
+This project is a Python port of [MatlabMailFeedback](https://github.com/dmascali/MatlabMailFeedback). `pymailfeedback` reproduces the same core idea — wrapping a script/function in a try/except block to report its exit status by email.
 
 ## Installation
 
@@ -49,11 +49,11 @@ def my_function(...):
 ### What the email looks like
 
 <div>
-  <img src="assets/example_success.png" alt="Image 1" width="50%" />
+  <img src="assets/example_success.png" alt="Image 1" width="75%" />
 </div>
 <br />
 <div>
-  <img src="assets/example_failure.png" alt="Image 2" width="50%" />
+  <img src="assets/example_failure.png" alt="Image 2" width="75%" />
 </div>
 
 ## Configuration

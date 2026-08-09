@@ -11,16 +11,7 @@ import inspect
 from pathlib import Path
 from functools import wraps
 from email.message import EmailMessage
-
- #TODO:
- # (DONE) test loading variable from env
- # (DONE) test verbose 1 and 2 in multifile
- # (DONE) test sendbeacon
- # test in pytorch with multiple workers
- # (DONE) test multiple addreesses
- # write readme
- # create repo
- # publication
+import multiprocessing as mp
 
 # Global configuration variables, lazily populated by _ensure_config_loaded()
 _SENDER_EMAIL = ""
@@ -122,6 +113,11 @@ def _raise_missing_config_error():
         "   (or use the 'pymailfeedback-init' command if installed as a CLI entry point)\n"
     )
 
+def _is_main_process():
+    """Returns True only if running in the main process (not a DataLoader worker
+    or any other multiprocessing child process)."""
+    return mp.current_process().name == "MainProcess"
+
 
 def _load_config():
     """
@@ -137,7 +133,8 @@ def _load_config():
     env_email = os.getenv("PYMAIL_SENDER_EMAIL")
     env_pwd = os.getenv("PYMAIL_SENDER_PASSWORD")
     if env_email and env_pwd:
-        print("[pymailfeedback] Using email configuration from environment variables.", file=sys.stderr)
+        if _is_main_process():
+            print("[pymailfeedback] Using email configuration from environment variables.", file=sys.stderr)
         _SENDER_EMAIL = env_email
         _SENDER_PASSWORD = env_pwd
         _SMTP_SERVER = os.getenv("PYMAIL_SMTP_SERVER", _SMTP_SERVER)
@@ -157,7 +154,8 @@ def _load_config():
                     _SMTP_PORT = config.get("smtp_port", _SMTP_PORT)
                     _DEFAULT_RECIPIENT = config.get("default_recipient", _DEFAULT_RECIPIENT)
                     _DEFAULT_VERBOSE = config.get("default_verbose", _DEFAULT_VERBOSE)
-                    print(f"[pymailfeedback] Loaded email configuration from {config_path.resolve()}.", file=sys.stderr)
+                    if _is_main_process():
+                        print(f"[pymailfeedback] Loaded email configuration from {config_path.resolve()}.", file=sys.stderr)
                 return
             except Exception as e:
                 print(f"Warning: Failed to read config file {config_path}: {e}", file=sys.stderr)
@@ -352,8 +350,9 @@ def sendstatus(to_addresses=None, verbose=None, shutdown=False, shutdown_delay=6
         verbose = _DEFAULT_VERBOSE
 
     # Summary of the decorator's configuration (recepient, verbosity, shutdown behavior)
-    print(f"[pymailfeedback] sendstatus decorator configured with recipient(s): {to_addresses or _DEFAULT_RECIPIENT}, "
-            f"shutdown: {shutdown}, shutdown_delay: {shutdown_delay} seconds.", file=sys.stderr)
+    if _is_main_process():
+        print(f"[pymailfeedback] sendstatus decorator configured with recipient(s): {to_addresses or _DEFAULT_RECIPIENT}, "
+                f"shutdown: {shutdown}, shutdown_delay: {shutdown_delay} seconds.", file=sys.stderr)
 
     def decorator(func):
         @wraps(func)
