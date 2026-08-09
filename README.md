@@ -5,11 +5,11 @@
 **pymailfeedback** is Python decorator that emails you the moment your script finishes, whether it succeeded or crashed. Get instant notifications with full tracebacks on failure and optional file attachments.
 
 <div>
-  <img src="https://raw.githubusercontent.com/dmascali/pymailfeedback/master/assets/example_success.png" alt="Example Success" width="75%" />
+  <img src="https://raw.githubusercontent.com/dmascali/pymailfeedback/master/assets/example_success_msg.png" alt="Example Success" width="75%" />
 </div>
 <br />
 <div>
-  <img src="https://raw.githubusercontent.com/dmascali/pymailfeedback/master/assets/example_failure.png" alt="Example Failure" width="75%" />
+  <img src="https://raw.githubusercontent.com/dmascali/pymailfeedback/master/assets/example_failure_msg.png" alt="Example Failure" width="75%" />
 </div>
 
 This project is a Python port of [MatlabMailFeedback](https://github.com/dmascali/MatlabMailFeedback). `pymailfeedback` reproduces the same core idea — wrapping a script/function in a try/except block to report its exit status by email.
