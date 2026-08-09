@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pymailfeedback"
 version = "0.1.0"
-description = "A Python port of MatlabMailFeedback to track script execution via email."
+description = "Email yourself automatically when a long-running Python script succeeds or fails — with traceback, attachments, and more"
 readme = "README.md"
 requires-python = ">=3.7"
 authors = [
@@ -19,3 +19,8 @@ classifiers = [
 dependencies = []
 [project.scripts]
 pymailfeedback-init = "pymailfeedback.core:_interactive_setup"
+
+[project.urls]
+Homepage = "https://github.com/dmascali/pymailfeedback"
+Repository = "https://github.com/dmascali/pymailfeedback"
+Issues = "https://github.com/dmascali/pymailfeedback/issues"

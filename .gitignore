@@ -1,6 +1,7 @@
 .idea
 build
 tmp
+dist
 src/pymailfeedback.egg-info
 src/pymailfeedback/__pycache__
 .pymailfeedback.json

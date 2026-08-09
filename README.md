@@ -1,6 +1,16 @@
 # pymailfeedback
 
-**pymailfeedback** sends you an email report the moment your script finishes, whether it succeeded or crashed. Wrap any function in the `@sendstatus` decorator and get notified by mail, complete with a traceback and optional file attachments if something went wrong.
+**Never wonder if your long-running script finished or crashed.**
+
+**pymailfeedback** is Python decorator that emails you the moment your script finishes, whether it succeeded or crashed. Get instant notifications with full tracebacks on failure and optional file attachments.
+
+<div>
+  <img src="https://raw.githubusercontent.com/dmascali/pymailfeedback/master/assets/example_success.png" alt="Example Success" width="75%" />
+</div>
+<br />
+<div>
+  <img src="https://raw.githubusercontent.com/dmascali/pymailfeedback/master/assets/example_failure.png" alt="Example Failure" width="75%" />
+</div>
 
 This project is a Python port of [MatlabMailFeedback](https://github.com/dmascali/MatlabMailFeedback). `pymailfeedback` reproduces the same core idea — wrapping a script/function in a try/except block to report its exit status by email.
 
@@ -46,22 +56,12 @@ def my_function(...):
 | `shutdown` | If `True`, shuts down the machine after the run completes, regardless of success or failure.                                                                                                                                       |
 | `shutdown_delay` | Seconds to wait before shutting down (default 60 seconds).                                                                                                                                                                         |
 
-### What the email looks like
-
-<div>
-  <img src="assets/example_success.png" alt="Image 1" width="75%" />
-</div>
-<br />
-<div>
-  <img src="assets/example_failure.png" alt="Image 2" width="75%" />
-</div>
-
 ## Configuration
 
 `pymailfeedback` needs SMTP credentials (sender email + password) to actually send mail.
-There are three ways to configure it, checked in this order:
+There are three ways to configure it, checked in this order (note: you probably want to go with option 2 or 3):
 
-### 1. Environment variables (recommended for servers, Docker, CI/CD)
+### 1. Environment variables
 
 | Variable | Maps to                                          | Required |
 |---|--------------------------------------------------|---|
@@ -81,7 +81,7 @@ python train.py
 
 If both `PYMAIL_SENDER_EMAIL` and `PYMAIL_SENDER_PASSWORD` are set, environment variables take priority over any JSON config file.
 
-### 2. A JSON configuration file
+### 2. A JSON configuration file (recommended)
 
 Create a file named `.pymailfeedback.json`, either in your current working directory or in your home directory (checked in that order):
 
