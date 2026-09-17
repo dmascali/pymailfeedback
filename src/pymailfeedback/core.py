@@ -234,7 +234,7 @@ def _shutdown_computer():
     system = platform.system()
     try:
         if system == "Windows":
-            os.system("shutdown /s /t 0")
+            os.system("shutdown /s /f /t 0")
         elif system == "Linux":
             os.system("sudo shutdown -h now")
         elif system == "Darwin":
