@@ -7,3 +7,4 @@ src/pymailfeedback/__pycache__
 .pymailfeedback.json
 test.py
 test_utils.py
+twine.txt

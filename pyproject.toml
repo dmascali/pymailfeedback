@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pymailfeedback"
-version = "0.1.0"
+version = "0.1.2"
 description = "Email yourself automatically when a long-running Python script succeeds or fails — with traceback, attachments, and more"
 readme = "README.md"
 requires-python = ">=3.7"

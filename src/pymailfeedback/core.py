@@ -253,6 +253,25 @@ def _handle_shutdown(shutdown, shutdown_delay):
         _shutdown_computer()
 
 
+def _get_function_file(func):
+    """
+    Returns the source file of the function's defining module, using the
+    module's __file__ attribute directly (more reliable than
+    inspect.getsourcefile, which can resolve to the wrong file when
+    multiple scripts define a function with the same name in __main__).
+    """
+    module_name = getattr(func, "__module__", None)
+    if module_name:
+        module = sys.modules.get(module_name)
+        if module and getattr(module, "__file__", None):
+            return module.__file__
+    # Fallback to inspect if the module lookup fails
+    try:
+        return inspect.getsourcefile(func)
+    except (TypeError, OSError):
+        return None
+
+
 # ---------------------------------------------------------------------------
 # HTML EMAIL BUILDER
 # ---------------------------------------------------------------------------
@@ -368,12 +387,8 @@ def sendstatus(to_addresses=None, verbose=None, shutdown=False, shutdown_delay=6
                 username, computername = "Unknown", "Unknown"
 
             func_name = func.__name__
-            try:
-                func_file = inspect.getsourcefile(func)
-                file_label = os.path.basename(func_file) if func_file else "unknown_file"
-            except TypeError:
-                func_file = "Unknown path"
-                file_label = "unknown_file"
+            func_file = _get_function_file(func)
+            file_label = os.path.basename(func_file) if func_file else "unknown_file"
 
             exit_status = 0
             error_traceback = ""
